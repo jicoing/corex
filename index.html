@@ -13,6 +13,53 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-container {
+                width: 95%; /* Full width on smaller screens */
+                padding: 10px;
+            }
+            .form-group {
+                margin-bottom: 10px;
+            }
+            h2 {
+                font-size: 1.5em; /* Smaller heading on smaller screens */
+            }
+            p {
+                font-size: 0.9em; /* Smaller paragraph text on smaller screens */
+            }
+            img[alt="Company Logo"] {
+                max-width: 200px; /* Smaller logo on smaller screens */
+            }
+            .form-group input[type="text"],
+            .form-group input[type="email"],
+            .form-group input[type="date"],
+            .form-group textarea,
+            button {
+                font-size: 0.9em;
+                padding: 6px;
+            }
+            .button-container {
+                margin-top: 15px;
+            }
+            button {
+                padding: 8px 16px;
+            }
+        }
+
+        /* Further adjustments for even smaller screens (e.g., phones) */
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.2em; /* Even smaller heading on phones */
+            }
+            p {
+                font-size: 0.8em; /* Even smaller paragraph text on phones */
+            }
+            .form-group label {
+                font-size: 0.9em; /* Smaller labels on phones */
+            }
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -54,7 +101,7 @@
 <body>
     <div class="form-container">
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="https://github.com/jicoing/corex/blob/main/corexlogo.PNG?raw=true" alt="Company Logo" style="max-width: 300px;">
+            <img src="corexlogo.png" alt="Company Logo" style="max-width: 300px;">
         </div>
         <h2 style="text-align: center;">SURGICAL USAGE FORM</h2>
         <p>Please provide facility materials manager or purchaser contact info:</p>
