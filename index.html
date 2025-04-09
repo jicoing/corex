@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Surgical Usage Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            height: 100px;
+        }
+        .form-group input[type="file"] {
+            padding: 5px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="corexlogo.png" alt="Company Logo" style="max-width: 300px;">
+        </div>
+        <h2 style="text-align: center;">SURGICAL USAGE FORM</h2>
+        <p>Please provide facility materials manager or purchaser contact info:</p>
+        <form id="usageForm">
+            <div class="form-group">
+                <label for="managerName">Name:</label>
+                <input type="text" id="managerName" name="managerName">
+            </div>
+            <div class="form-group">
+                <label for="managerEmail">EMAIL:</label>
+                <input type="email" id="managerEmail" name="managerEmail">
+            </div>
+            <div class="form-group">
+                <label for="managerPhone">Phone:</label>
+                <input type="text" id="managerPhone" name="managerPhone">
+            </div>
+
+            <div class="form-group">
+                <label for="hospital">HOSPITAL:</label>
+                <input type="text" id="hospital" name="hospital">
+            </div>
+            <div class="form-group">
+                <label for="cityState">CITY/STATE:</label>
+                <input type="text" id="cityState" name="cityState">
+            </div>
+            <div class="form-group">
+                <label for="po">PO:</label>
+                <input type="text" id="po" name="po">
+            </div>
+            <div class="form-group">
+                <label for="date">DATE:</label>
+                <input type="date" id="date" name="date">
+            </div>
+            <div class="form-group">
+                <label for="surgeon">SURGEON:</label>
+                <input type="text" id="surgeon" name="surgeon">
+            </div>
+            <div class="form-group">
+                <label for="repDistributor">REP./DISTRIBUTOR:</label>
+                <input type="text" id="repDistributor" name="repDistributor">
+            </div>
+
+            <div class="form-group">
+                <label for="productSticker">Product lot stickers:</label>
+        <input type="file" id="productSticker" name="productSticker" accept="image/*" onchange="previewProductSticker(event)">
+        <div id="productStickerPreview" style="margin-top: 10px; max-width: 300px; max-height: 300px;"></div>
+        <button type="button" onclick="cropProductSticker()">Crop Sticker</button>
+    </div>
+    <div class="form-group">
+        <label for="patientStickers">Patient stickers:</label>
+        <textarea id="patientStickers" name="patientStickers"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="signature">AUTHORIZED SIGNATURE:</label>
+                <input type="text" id="signature" name="signature">
+            </div>
+             <div class="form-group">
+                <label for="signatureDate">Date:</label>
+                <input type="date" id="signatureDate" name="signatureDate">
+            </div>
+
+            <div class="form-group">
+                <label for="recipientEmails">Recipient Emails (comma-separated):</label>
+                <input type="email" id="recipientEmails" name="recipientEmails" multiple>
+            </div>
+
+            <div class="button-container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script>
+        document.getElementById('usageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const recipientEmails = formData.get('recipientEmails');
+            formData.delete('recipientEmails'); // Remove from form data to avoid sending to backend
+
+            const productStickerPreview = document.getElementById('productStickerPreview');
+            const croppedImage = productStickerPreview.querySelector('img');
+            let imageData = null;
+            if (croppedImage) {
+                imageData = croppedImage.src;
+            }
+            formData.append('productStickerImage', imageData);
+
+
+            // Simulate sending data to email (replace with actual email sending logic)
+            console.log('Form Data:');
+            for (let pair of formData.entries()) {
+                console.log(pair[0]+ ': '+ pair[1]);
+            }
+            console.log('Recipient Emails:', recipientEmails);
+
+
+            alert('Form submitted! Form data logged to console (email sending not implemented in this demo).');
+        });
+
+        let cropper;
+        function previewProductSticker(event) {
+            const preview = document.getElementById('productStickerPreview');
+            preview.innerHTML = '';
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+                    preview.appendChild(img);
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    cropper = new Cropper(img, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        crop(event) {
+                            //console.log(event.detail.x);
+                            //console.log(event.detail.y);
+                            //console.log(event.detail.width);
+                            //console.log(event.detail.height);
+                            //console.log(event.detail.rotate);
+                            //console.log(event.detail.scaleX);
+                            //console.log(event.detail.scaleY);
+                        },
+                    });
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function cropProductSticker() {
+            if (cropper) {
+                const croppedCanvas = cropper.getCroppedCanvas();
+                const croppedImage = document.createElement('img');
+                croppedImage.src = croppedCanvas.toDataURL();
+                croppedImage.style.maxWidth = '100%';
+                croppedImage.style.maxHeight = '100%';
+
+                const preview = document.getElementById('productStickerPreview');
+                preview.innerHTML = '';
+                preview.appendChild(croppedImage);
+
+                cropper.destroy();
+                cropper = null;
+            }
+        }
+    </script>
+</body>
+</html>
